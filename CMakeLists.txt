@@ -26,6 +26,13 @@ set(SOURCES
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+# Точка входа в src/main.cpp — это WinMain, а не main. Значит приложение
+# оконное: печати в консоль в нём нет вообще (0 printf, 0 std::cout),
+# вывод идёт через MessageBox. Линкер по умолчанию ждёт main и падает с
+# «unresolved external symbol main», поэтому подсистему объявляем явно.
+# Для MinGW это даёт -mwindows, для MSVC — /SUBSYSTEM:WINDOWS.
+set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE TRUE)
+
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE bcrypt comctl32 shell32 wintrust iphlpapi ws2_32 psapi wininet)

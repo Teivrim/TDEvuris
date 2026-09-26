@@ -1,0 +1,34 @@
+﻿# ── TDEvuris ────────────────────────────────────────────────────────────
+# Использует wintrust, iphlpapi, bcrypt — это Windows API, и под MinGW
+# они есть не всегда. Поэтому CI собирает MSVC, как и указано в README.
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Сборка (MSVC)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Конфигурация
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+
+      - name: Сборка
+        run: cmake --build build
+
+      - name: Бинарник на месте
+        run: |
+          $exe = Get-ChildItem build -Recurse -Filter TDEvuris.exe | Select-Object -First 1
+          if (-not $exe) { "TDEvuris.exe не создан"; exit 1 }
+          "TDEvuris.exe: {0:N0} байт" -f $exe.Length

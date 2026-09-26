@@ -1,6 +1,12 @@
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
 #define _UNICODE
+// NOMINMAX: без этого windows.h определяет min/max как макросы,
+// и любой вызов std::min/std::max не компилируется (MSVC C2589).
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
 #include <windows.h>
 #include <dbt.h>
 #include <tlhelp32.h>

@@ -1,4 +1,10 @@
 #include "memory_scanner.h"
+// NOMINMAX: без этого windows.h определяет min/max как макросы,
+// и любой вызов std::min/std::max не компилируется (MSVC C2589).
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
 #include <windows.h>
 #include <tlhelp32.h>
 #include <psapi.h>

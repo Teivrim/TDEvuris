@@ -5,10 +5,17 @@
 #include <cmath>
 #include <filesystem>
 #include <cstring>
+// NOMINMAX: без этого windows.h определяет min/max как макросы,
+// и любой вызов std::min/std::max не компилируется (MSVC C2589).
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
 #include <windows.h>
 #include <wintrust.h>
 #include <softpub.h>
 #include <wchar.h>
+#include <algorithm>   // std::min / std::max
 
 static std::string toLower(std::string s) {
     for (auto& c : s) c = std::tolower(static_cast<unsigned char>(c));
